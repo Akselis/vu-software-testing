@@ -92,7 +92,7 @@ public class DemoQaTestTwo extends TestBase{
             assert currentPage != null;
             int currentPageNumber = Integer.parseInt(currentPage);
 
-            if(totalPages == currentPageNumber || !nextButton.isEnabled()) {
+            if(totalPages == 1 && totalPages == currentPageNumber) {
                 break;
             }
             else{
