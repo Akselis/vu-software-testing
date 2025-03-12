@@ -33,11 +33,13 @@ public class DemoWebShopTest {
         box.findElement(By.className("picture")).click();
 
         for(int i = 0; i < 2; i++){
-            driver.findElement(By.xpath("//*[@id='giftcard_4_RecipientName']"))
-                    .sendKeys("testgetter");
+            var recipient = driver.findElement(By.xpath("//*[@id='giftcard_4_RecipientName']"));
+            recipient.clear();
+            recipient.sendKeys("testgetter");
 
-            driver.findElement(By.xpath("//*[@id='giftcard_4_SenderName']"))
-                    .sendKeys("testsender");
+            var sender = driver.findElement(By.xpath("//*[@id='giftcard_4_SenderName']"));
+            sender.clear();
+            sender.sendKeys("testsender");
 
             var q1 = driver.findElement(By.xpath("//*[@id='addtocart_4_EnteredQuantity']"));
             q1.clear();
@@ -64,8 +66,9 @@ public class DemoWebShopTest {
 
             select.selectByValue("47");
 
-            driver.findElement(By.xpath("//*[@id='product_attribute_71_10_16']"))
-                    .sendKeys("80");
+            var q1 = driver.findElement(By.xpath("//*[@id='product_attribute_71_10_16']"));
+            q1.clear();
+            q1.sendKeys("80");
 
             driver.findElement(By.xpath("//*[@id='product_attribute_71_11_17_50']"))
                     .click();

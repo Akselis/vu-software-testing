@@ -8,7 +8,13 @@ public class Main {
         var test = new DemoWebShopTest();
 
         test.setup();
-        test.run();
+        var result = test.run();
+        if(result){
+            System.out.println("Test passed");
+        }
+        else{
+            System.out.println("Test failed");
+        }
         test.teardown();
     }
 }
