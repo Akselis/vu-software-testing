@@ -8,15 +8,14 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 
 public class JUnitTests {
@@ -37,7 +36,7 @@ public class JUnitTests {
 
     @ParameterizedTest
     @ValueSource(strings = { "data1.txt", "data2.txt" })
-    public void InputFileOne(String inputFile) throws IOException {
+    public void InputFileTest(String inputFile) throws IOException {
 
         driver.get("https://demowebshop.tricentis.com/");
 
@@ -45,17 +44,25 @@ public class JUnitTests {
 
         driver.findElement(By.id("Email")).sendKeys("ponas.tadas@gmail.com");
         driver.findElement(By.id("Password")).sendKeys("Tadas123");
-        driver.findElement(By.id("Log in")).click();
+        driver.findElement(By.xpath("//input[@value='Log in']")).click();
 
-        driver.findElement(By.xpath("//ul[@class='top-menu']/descendant::a[contains(text(), 'Digital downloads')]"));
+        wait = new WebDriverWait(driver, Duration.ofSeconds(20));
 
-        BufferedReader br = new BufferedReader(new FileReader(inputFile));
+        var el = driver.findElement(By.xpath("//ul[@class='top-menu']/descendant::a[contains(text(), 'Digital downloads')]"));
+        wait.until(ExpectedConditions.elementToBeClickable(el)).click();
+
+        InputStream inputStream = getClass().getClassLoader().getResourceAsStream(inputFile);
+        assertNotNull(inputStream, "File not found in resources");
+
+        BufferedReader br = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
         String line;
 
         while( (line = br.readLine()) != null) {
-            driver.findElements(By.xpath("//div[@class='item-box'][descendant::a[contains(text(), " + line + ")]]/descendant::div[@class='buttons']/input"))
-                    .getFirst()
-                    .click();
+            String xpath = "//div[@class='item-box'][descendant::a[contains(text(), '" + line + "')]]/descendant::div[@class='buttons']/input";
+
+            driver.findElement(By.xpath(xpath)).click();
+            wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='bar-notification']")));
+            wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//*[@id='bar-notification']")));
         }
 
         br.close();
@@ -64,26 +71,8 @@ public class JUnitTests {
         driver.findElement(By.xpath("//*[@id='termsofservice']")).click();
         driver.findElement(By.xpath("//*[@id='checkout']")).click();
 
-        Select select = new Select(driver.findElement(By.xpath("//*[@id='BillingNewAddress_CountryId']")));
-        select.selectByIndex(0);
-
-        var city = driver.findElement(By.xpath("//*[@id='BillingNewAddress_City']"));
-        city.clear();
-        city.sendKeys("Tadamiestis");
-
-        var add = driver.findElement(By.xpath("//*[@id='BillingNewAddress_City']"));
-        add.clear();
-        add.sendKeys("Tadgatve");
-
-        var zip = driver.findElement(By.xpath("//*[@id='BillingNewAddress_City']"));
-        zip.clear();
-        zip.sendKeys("11111");
-
-        var phone = driver.findElement(By.xpath("//*[@id='BillingNewAddress_City']"));
-        zip.clear();
-        zip.sendKeys("+37066666666");
-
-        wait = new WebDriverWait(driver, Duration.ofSeconds(20));
+        wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//input[@onclick='Billing.save()']")))
+                .click();
 
         wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//input[@onclick='PaymentMethod.save()']")))
                 .click();
@@ -94,7 +83,9 @@ public class JUnitTests {
         wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//input[@value='Confirm']")))
                 .click();
 
-        var orderResult = driver.findElement(By.xpath("//div[@class='page checkout-page']/descendant::strong")).toString();
+        wait.until(ExpectedConditions.urlToBe("https://demowebshop.tricentis.com/checkout/completed/"));
+
+        var orderResult = driver.findElement(By.xpath("//div[@class='page checkout-page']/descendant::strong")).getText();
 
         assertEquals("Your order has been successfully processed!", orderResult);
     }
