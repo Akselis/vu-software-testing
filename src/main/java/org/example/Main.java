@@ -7,7 +7,7 @@ import tests.DemoWebShopTest;
 public class Main {
     public static void main(String[] args) {
 
-        var test = new DemoQaTestTwo();
+        var test = new DemoWebShopTest();
 
         test.setup();
         var result = test.run();

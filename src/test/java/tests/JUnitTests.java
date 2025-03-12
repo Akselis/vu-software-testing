@@ -120,12 +120,20 @@ public class JUnitTests {
         wait.until(ExpectedConditions.urlToBe("https://demowebshop.tricentis.com/"));
 
         driver.findElement(By.xpath("//a[@href='/login']")).click();
+        driver.findElement(By.id("Email")).sendKeys(currentEmail);
+        driver.findElement(By.id("Password")).sendKeys("Tadas123");
+        driver.findElement(By.xpath("//input[@value='Log in']")).click();
+
+        assertEquals("https://demowebshop.tricentis.com/login", driver.getCurrentUrl());
+
+        driver.findElement(By.id("Email")).clear();
         driver.findElement(By.id("Email")).sendKeys(newEmail);
         driver.findElement(By.id("Password")).sendKeys("Tadas123");
         driver.findElement(By.xpath("//input[@value='Log in']")).click();
 
-        var currentUrl = driver.getCurrentUrl();
-        assertEquals("https://demowebshop.tricentis.com/", currentUrl);
+        wait.until(ExpectedConditions.urlToBe("https://demowebshop.tricentis.com/"));
+
+        assertEquals("https://demowebshop.tricentis.com/", driver.getCurrentUrl());
     }
 
     @AfterEach
