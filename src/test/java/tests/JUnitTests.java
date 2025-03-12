@@ -3,6 +3,7 @@ package tests;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -88,6 +89,43 @@ public class JUnitTests {
         var orderResult = driver.findElement(By.xpath("//div[@class='page checkout-page']/descendant::strong")).getText();
 
         assertEquals("Your order has been successfully processed!", orderResult);
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "ponas.tadas@gmail.com, tadas.ponas@gmail.com",
+            "tadas.ponas@gmail.com, ponas.tadas@gmail.com"
+    })
+    public void EmailChangeTest(String currentEmail, String newEmail) {
+
+        driver.get("https://demowebshop.tricentis.com/");
+
+        driver.findElement(By.xpath("//a[@href='/login']")).click();
+
+        driver.findElement(By.id("Email")).sendKeys(currentEmail);
+        driver.findElement(By.id("Password")).sendKeys("Tadas123");
+        driver.findElement(By.xpath("//input[@value='Log in']")).click();
+
+        driver.findElement(By.xpath("//div[@class='header-links']/descendant::a[@class='account']")).click();
+
+        var emailField = driver.findElement(By.xpath("//*[@id='Email']"));
+        emailField.clear();
+        emailField.sendKeys(newEmail);
+
+        driver.findElement(By.xpath("//input[@value='Save']")).click();
+
+        driver.findElement(By.xpath("//a[@href='/logout']")).click();
+        wait = new WebDriverWait(driver, Duration.ofSeconds(20));
+
+        wait.until(ExpectedConditions.urlToBe("https://demowebshop.tricentis.com/"));
+
+        driver.findElement(By.xpath("//a[@href='/login']")).click();
+        driver.findElement(By.id("Email")).sendKeys(newEmail);
+        driver.findElement(By.id("Password")).sendKeys("Tadas123");
+        driver.findElement(By.xpath("//input[@value='Log in']")).click();
+
+        var currentUrl = driver.getCurrentUrl();
+        assertEquals("https://demowebshop.tricentis.com/", currentUrl);
     }
 
     @AfterEach
