@@ -1,18 +1,11 @@
 package tests;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.Select;
 
-public class DemoWebShopTest {
-    private WebDriver driver;
-
-    public void setup() {
-        driver = new ChromeDriver();             // Initialize Chrome browser
-        driver.manage().window().maximize();     // Maximize the browser window
-    }
+public class DemoWebShopTest extends TestBase{
 
     public boolean run(){
         driver.get("https://demowebshop.tricentis.com/");
@@ -100,11 +93,5 @@ public class DemoWebShopTest {
                 .getText();
 
         return Double.parseDouble(subtotal) == 1002600.00;
-    }
-
-    public void teardown() {
-        if (driver != null) {
-            driver.quit();  // Close the browser
-        }
     }
 }
