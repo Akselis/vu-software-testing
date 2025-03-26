@@ -1,4 +1,4 @@
-# Greeting weary traveler!🥵
+# Greetings weary traveler!🥵
 If you've come following the trail of our software testing presentation, you're in the right place.
 ## How to test YOUR headless performance
 I used IntelliJ IDEA to write and run my tests, so I'll provide a guide for how to run it this way.
