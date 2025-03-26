@@ -13,6 +13,8 @@ public class DemoQaTestTwo extends TestBase{
 
         driver.get("http://demoqa.com/");
 
+        ((JavascriptExecutor) driver).executeScript("document.body.style.zoom='75%';"); // Set zoom to 75%
+
         driver.findElement(
                 By.xpath("//div[@class=\"category-cards\"]/div[./descendant::h5[contains(text(), \"Elements\")]]"))
                 .click();

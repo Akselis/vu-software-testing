@@ -1,13 +1,11 @@
 package org.example;
 
-import tests.DemoQaTestOne;
 import tests.DemoQaTestTwo;
-import tests.DemoWebShopTest;
 
 public class Main {
     public static void main(String[] args) {
 
-        var test = new DemoWebShopTest();
+        var test = new DemoQaTestTwo();
 
         test.setup();
         var result = test.run();
@@ -17,6 +15,5 @@ public class Main {
         else{
             System.out.println("Test failed");
         }
-        test.teardown();
     }
 }
